@@ -10,6 +10,11 @@ import { HomePage } from "./pages/HomePage";
 import { CampaignsPage } from "./pages/CampaignsPage";
 import { AutomationsPage } from "./pages/AutomationsPage";
 import { AudiencePage } from "./pages/AudiencePage";
+import { CreatePage } from "./pages/CreatePage";
+import { CreateCampaignPage } from "./pages/campaigns/CreateCampaignPage";
+import { TemplatesPage } from "./pages/campaigns/TemplatesPage";
+import { ABTestingPage } from "./pages/campaigns/ABTestingPage";
+import { PrebuiltJourneysPage } from "./pages/automations/PrebuiltJourneysPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,15 +30,18 @@ const App: React.FC = () => {
             <Routes>
               <Route path="/" element={<HomePage />} />
               
+              {/* Create Route */}
+              <Route path="/create" element={<CreatePage />} />
+              
               {/* Campaigns Routes */}
               <Route path="/campaigns" element={<CampaignsPage />} />
-              <Route path="/campaigns/create" element={<div className="p-8 text-center"><h1 className="text-2xl font-bold">Create Campaign - Coming Soon</h1></div>} />
-              <Route path="/campaigns/templates" element={<div className="p-8 text-center"><h1 className="text-2xl font-bold">Campaign Templates - Coming Soon</h1></div>} />
-              <Route path="/campaigns/ab-testing" element={<div className="p-8 text-center"><h1 className="text-2xl font-bold">A/B Testing - Coming Soon</h1></div>} />
+              <Route path="/campaigns/create" element={<CreateCampaignPage />} />
+              <Route path="/campaigns/templates" element={<TemplatesPage />} />
+              <Route path="/campaigns/ab-testing" element={<ABTestingPage />} />
               
               {/* Automations Routes */}
               <Route path="/automations" element={<AutomationsPage />} />
-              <Route path="/automations/prebuilt" element={<div className="p-8 text-center"><h1 className="text-2xl font-bold">Pre-built Journeys - Coming Soon</h1></div>} />
+              <Route path="/automations/prebuilt" element={<PrebuiltJourneysPage />} />
               <Route path="/automations/transactional" element={<div className="p-8 text-center"><h1 className="text-2xl font-bold">Transactional Email - Coming Soon</h1></div>} />
               <Route path="/automations/journeys" element={<div className="p-8 text-center"><h1 className="text-2xl font-bold">Customer Journeys - Coming Soon</h1></div>} />
               
@@ -72,9 +80,6 @@ const App: React.FC = () => {
               <Route path="/integrations" element={<div className="p-8 text-center"><h1 className="text-2xl font-bold">Integrations - Coming Soon</h1></div>} />
               <Route path="/integrations/browse" element={<div className="p-8 text-center"><h1 className="text-2xl font-bold">Browse Integrations - Coming Soon</h1></div>} />
               <Route path="/integrations/api" element={<div className="p-8 text-center"><h1 className="text-2xl font-bold">API Keys - Coming Soon</h1></div>} />
-              
-              {/* Create Route */}
-              <Route path="/create" element={<div className="p-8 text-center"><h1 className="text-2xl font-bold">Create - Coming Soon</h1></div>} />
               
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
