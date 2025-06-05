@@ -15,6 +15,13 @@ import { CreateCampaignPage } from "./pages/campaigns/CreateCampaignPage";
 import { TemplatesPage } from "./pages/campaigns/TemplatesPage";
 import { ABTestingPage } from "./pages/campaigns/ABTestingPage";
 import { PrebuiltJourneysPage } from "./pages/automations/PrebuiltJourneysPage";
+import { SignupFormsPage } from "./pages/forms/SignupFormsPage";
+import { LandingPagesPage } from "./pages/forms/LandingPagesPage";
+import { PopupsPage } from "./pages/forms/PopupsPage";
+import { AnalyticsPage } from "./pages/analytics/AnalyticsPage";
+import { WebsitePage } from "./pages/website/WebsitePage";
+import { ContentPage } from "./pages/content/ContentPage";
+import { IntegrationsPage } from "./pages/integrations/IntegrationsPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -47,9 +54,9 @@ const App: React.FC = () => {
               
               {/* Forms Routes */}
               <Route path="/forms" element={<div className="p-8 text-center"><h1 className="text-2xl font-bold">Forms - Coming Soon</h1></div>} />
-              <Route path="/forms/signup" element={<div className="p-8 text-center"><h1 className="text-2xl font-bold">Signup Forms - Coming Soon</h1></div>} />
-              <Route path="/forms/landing" element={<div className="p-8 text-center"><h1 className="text-2xl font-bold">Landing Pages - Coming Soon</h1></div>} />
-              <Route path="/forms/popups" element={<div className="p-8 text-center"><h1 className="text-2xl font-bold">Pop-ups - Coming Soon</h1></div>} />
+              <Route path="/forms/signup" element={<SignupFormsPage />} />
+              <Route path="/forms/landing" element={<LandingPagesPage />} />
+              <Route path="/forms/popups" element={<PopupsPage />} />
               
               {/* Audience Routes */}
               <Route path="/audience" element={<AudiencePage />} />
@@ -60,24 +67,24 @@ const App: React.FC = () => {
               <Route path="/audience/inbox" element={<div className="p-8 text-center"><h1 className="text-2xl font-bold">Inbox - Coming Soon</h1></div>} />
               
               {/* Analytics Routes */}
-              <Route path="/analytics" element={<div className="p-8 text-center"><h1 className="text-2xl font-bold">Analytics - Coming Soon</h1></div>} />
+              <Route path="/analytics" element={<AnalyticsPage />} />
               <Route path="/analytics/custom" element={<div className="p-8 text-center"><h1 className="text-2xl font-bold">Custom Reports - Coming Soon</h1></div>} />
               <Route path="/analytics/revenue" element={<div className="p-8 text-center"><h1 className="text-2xl font-bold">Revenue Reports - Coming Soon</h1></div>} />
               <Route path="/analytics/audience" element={<div className="p-8 text-center"><h1 className="text-2xl font-bold">Audience Insights - Coming Soon</h1></div>} />
               
               {/* Website Routes */}
-              <Route path="/website" element={<div className="p-8 text-center"><h1 className="text-2xl font-bold">Website - Coming Soon</h1></div>} />
+              <Route path="/website" element={<WebsitePage />} />
               <Route path="/website/reports" element={<div className="p-8 text-center"><h1 className="text-2xl font-bold">Website Reports - Coming Soon</h1></div>} />
               <Route path="/website/sites" element={<div className="p-8 text-center"><h1 className="text-2xl font-bold">Connected Sites - Coming Soon</h1></div>} />
               
               {/* Content Routes */}
-              <Route path="/content" element={<div className="p-8 text-center"><h1 className="text-2xl font-bold">Content - Coming Soon</h1></div>} />
+              <Route path="/content" element={<ContentPage />} />
               <Route path="/content/templates" element={<div className="p-8 text-center"><h1 className="text-2xl font-bold">Email Templates - Coming Soon</h1></div>} />
               <Route path="/content/brand" element={<div className="p-8 text-center"><h1 className="text-2xl font-bold">Brand Kit - Coming Soon</h1></div>} />
               <Route path="/content/images" element={<div className="p-8 text-center"><h1 className="text-2xl font-bold">Image Library - Coming Soon</h1></div>} />
               
               {/* Integrations Routes */}
-              <Route path="/integrations" element={<div className="p-8 text-center"><h1 className="text-2xl font-bold">Integrations - Coming Soon</h1></div>} />
+              <Route path="/integrations" element={<IntegrationsPage />} />
               <Route path="/integrations/browse" element={<div className="p-8 text-center"><h1 className="text-2xl font-bold">Browse Integrations - Coming Soon</h1></div>} />
               <Route path="/integrations/api" element={<div className="p-8 text-center"><h1 className="text-2xl font-bold">API Keys - Coming Soon</h1></div>} />
               
