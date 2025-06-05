@@ -2,7 +2,8 @@
 import React from 'react';
 import { TopNavigation } from './TopNavigation';
 import { VoiceTrainer } from './VoiceTrainer';
-import { SidebarProvider } from '@/components/ui/sidebar';
+import { AppSidebar } from './AppSidebar';
+import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -11,12 +12,15 @@ interface MainLayoutProps {
 export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex flex-col w-full bg-gray-50">
-        <TopNavigation />
-        <VoiceTrainer />
-        <main className="flex-1 overflow-hidden">
-          {children}
-        </main>
+      <div className="min-h-screen flex w-full bg-gray-50">
+        <AppSidebar />
+        <SidebarInset>
+          <TopNavigation />
+          <VoiceTrainer />
+          <main className="flex-1 overflow-hidden">
+            {children}
+          </main>
+        </SidebarInset>
       </div>
     </SidebarProvider>
   );

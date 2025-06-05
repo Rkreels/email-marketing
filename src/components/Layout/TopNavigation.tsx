@@ -1,60 +1,33 @@
 
-import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React from 'react';
+import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-
-const mainTabs = [
-  { id: 'create', label: 'Create', path: '/create' },
-  { id: 'home', label: 'Home', path: '/' },
-  { id: 'campaigns', label: 'Campaigns', path: '/campaigns' },
-  { id: 'automations', label: 'Automations', path: '/automations' },
-  { id: 'forms', label: 'Forms', path: '/forms' },
-  { id: 'audience', label: 'Audience', path: '/audience' },
-  { id: 'analytics', label: 'Analytics', path: '/analytics' },
-  { id: 'website', label: 'Website', path: '/website' },
-  { id: 'content', label: 'Content', path: '/content' },
-  { id: 'integrations', label: 'Integrations', path: '/integrations' },
-];
+import { Bell, Search, User } from 'lucide-react';
 
 export const TopNavigation: React.FC = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const getActiveTab = () => {
-    if (location.pathname === '/') return 'home';
-    return location.pathname.split('/')[1] || 'home';
-  };
-
-  const activeTab = getActiveTab();
-
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center space-x-8">
-            <div className="flex-shrink-0">
-              <h1 className="text-2xl font-bold text-purple-600">MailChimp Clone</h1>
-            </div>
-            <nav className="flex space-x-1">
-              {mainTabs.map((tab) => (
-                <Button
-                  key={tab.id}
-                  variant="ghost"
-                  onClick={() => navigate(tab.path)}
-                  className={cn(
-                    "px-4 py-2 text-sm font-medium rounded-md transition-colors",
-                    activeTab === tab.id
-                      ? "bg-purple-100 text-purple-700"
-                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-                  )}
-                  data-voice-context={`Navigate to ${tab.label} section`}
-                >
-                  {tab.label}
-                </Button>
-              ))}
-            </nav>
+    <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
+      <div className="flex items-center justify-between h-16 px-6">
+        <div className="flex items-center space-x-4">
+          <SidebarTrigger />
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <input
+              type="text"
+              placeholder="Search campaigns, contacts, and more..."
+              className="pl-10 pr-4 py-2 w-80 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              data-voice-context="Search across all your campaigns, contacts, and content"
+            />
           </div>
+        </div>
+        
+        <div className="flex items-center space-x-4">
+          <Button variant="ghost" size="icon" data-voice-context="View notifications and alerts">
+            <Bell className="w-5 h-5" />
+          </Button>
+          <Button variant="ghost" size="icon" data-voice-context="Access account settings and profile">
+            <User className="w-5 h-5" />
+          </Button>
         </div>
       </div>
     </header>
