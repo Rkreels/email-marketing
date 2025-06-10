@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -23,6 +22,7 @@ import { WebsitePage } from "./pages/website/WebsitePage";
 import { ContentPage } from "./pages/content/ContentPage";
 import { IntegrationsPage } from "./pages/integrations/IntegrationsPage";
 import NotFound from "./pages/NotFound";
+import { FormsPage } from "./pages/forms/FormsPage";
 
 const queryClient = new QueryClient();
 
@@ -51,6 +51,7 @@ const App: React.FC = () => {
               <Route path="/automations/prebuilt" element={<PrebuiltJourneysPage />} />
               
               {/* Forms Routes */}
+              <Route path="/forms" element={<FormsPage />} />
               <Route path="/forms/signup" element={<SignupFormsPage />} />
               <Route path="/forms/landing" element={<LandingPagesPage />} />
               <Route path="/forms/popups" element={<PopupsPage />} />
