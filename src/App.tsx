@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -14,9 +15,13 @@ import { CreateCampaignPage } from "./pages/campaigns/CreateCampaignPage";
 import { TemplatesPage } from "./pages/campaigns/TemplatesPage";
 import { ABTestingPage } from "./pages/campaigns/ABTestingPage";
 import { PrebuiltJourneysPage } from "./pages/automations/PrebuiltJourneysPage";
+import { AllJourneysPage } from "./pages/automations/AllJourneysPage";
+import { TransactionalEmailPage } from "./pages/automations/TransactionalEmailPage";
+import { CustomerJourneysPage } from "./pages/automations/CustomerJourneysPage";
 import { SignupFormsPage } from "./pages/forms/SignupFormsPage";
 import { LandingPagesPage } from "./pages/forms/LandingPagesPage";
 import { PopupsPage } from "./pages/forms/PopupsPage";
+import { TagsPage } from "./pages/audience/TagsPage";
 import { AnalyticsPage } from "./pages/analytics/AnalyticsPage";
 import { WebsitePage } from "./pages/website/WebsitePage";
 import { ContentPage } from "./pages/content/ContentPage";
@@ -48,7 +53,10 @@ const App: React.FC = () => {
               
               {/* Automations Routes */}
               <Route path="/automations" element={<AutomationsPage />} />
+              <Route path="/automations/all-journeys" element={<AllJourneysPage />} />
               <Route path="/automations/prebuilt" element={<PrebuiltJourneysPage />} />
+              <Route path="/automations/transactional" element={<TransactionalEmailPage />} />
+              <Route path="/automations/customer-journeys" element={<CustomerJourneysPage />} />
               
               {/* Forms Routes */}
               <Route path="/forms" element={<FormsPage />} />
@@ -58,6 +66,7 @@ const App: React.FC = () => {
               
               {/* Audience Routes */}
               <Route path="/audience" element={<AudiencePage />} />
+              <Route path="/audience/tags" element={<TagsPage />} />
               
               {/* Analytics Routes */}
               <Route path="/analytics" element={<AnalyticsPage />} />
