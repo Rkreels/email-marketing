@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { MainLayout } from "./components/Layout/MainLayout";
+import { AppProvider } from "./contexts/AppContext";
 import { HomePage } from "./pages/HomePage";
 import { CampaignsPage } from "./pages/CampaignsPage";
 import { AutomationsPage } from "./pages/AutomationsPage";
@@ -38,11 +39,12 @@ const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <MainLayout>
-            <Routes>
+        <AppProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <MainLayout>
+              <Routes>
               <Route path="/" element={<HomePage />} />
               
               {/* Create Route */}
@@ -89,9 +91,10 @@ const App: React.FC = () => {
               
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
-            </Routes>
-          </MainLayout>
-        </BrowserRouter>
+              </Routes>
+            </MainLayout>
+          </BrowserRouter>
+        </AppProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );
