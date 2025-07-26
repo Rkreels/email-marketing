@@ -29,6 +29,8 @@ import { PreferencesPage } from "./pages/audience/PreferencesPage";
 import { InboxPage } from "./pages/audience/InboxPage";
 import { AnalyticsPage } from "./pages/analytics/AnalyticsPage";
 import { WebsitePage } from "./pages/website/WebsitePage";
+import { ConnectedSitesPage } from "./pages/website/ConnectedSitesPage";
+import { ReportsPage } from "./pages/website/ReportsPage";
 import { ContentPage } from "./pages/content/ContentPage";
 import { IntegrationsPage } from "./pages/integrations/IntegrationsPage";
 import NotFound from "./pages/NotFound";
@@ -82,6 +84,8 @@ const App: React.FC = () => {
               
               {/* Website Routes */}
               <Route path="/website" element={<WebsitePage />} />
+              <Route path="/website/sites" element={<ConnectedSitesPage />} />
+              <Route path="/website/reports" element={<ReportsPage />} />
               
               {/* Content Routes */}
               <Route path="/content" element={<ContentPage />} />
