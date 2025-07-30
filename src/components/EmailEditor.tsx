@@ -7,9 +7,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { DragDropEmailBuilder } from './DragDropEmailBuilder';
 import { 
   Type, Image, Link, Palette, Layout, AlignLeft, AlignCenter, 
-  Bold, Italic, Underline, Save, Eye, Smartphone, Monitor, Tablet 
+  Bold, Italic, Underline, Save, Eye, Smartphone, Monitor, Tablet, Layers 
 } from 'lucide-react';
 
 interface EmailEditorProps {
@@ -28,6 +29,7 @@ export const EmailEditor: React.FC<EmailEditorProps> = ({
   const [content, setContent] = useState(initialContent);
   const [previewMode, setPreviewMode] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
   const [selectedElement, setSelectedElement] = useState<string | null>(null);
+  const [isDragDropOpen, setIsDragDropOpen] = useState(false);
 
   const elements = [
     { id: 'text', name: 'Text Block', icon: Type, description: 'Add headlines and paragraphs' },
@@ -205,6 +207,15 @@ export const EmailEditor: React.FC<EmailEditorProps> = ({
             {/* Toolbar */}
             <div className="p-4 border-b bg-white flex items-center justify-between">
               <div className="flex items-center space-x-2">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => setIsDragDropOpen(true)}
+                >
+                  <Layers className="h-4 w-4 mr-1" />
+                  Drag & Drop
+                </Button>
+                <div className="w-px h-6 bg-gray-300 mx-2" />
                 <Button variant="outline" size="sm">
                   <Bold className="h-4 w-4" />
                 </Button>
@@ -286,6 +297,18 @@ export const EmailEditor: React.FC<EmailEditorProps> = ({
             </div>
           </div>
         </div>
+
+        {/* Drag & Drop Email Builder */}
+        <DragDropEmailBuilder
+          isOpen={isDragDropOpen}
+          onClose={() => setIsDragDropOpen(false)}
+          initialContent={content}
+          onSave={(jsonContent, htmlContent) => {
+            setContent(htmlContent);
+            onSave(htmlContent);
+            setIsDragDropOpen(false);
+          }}
+        />
       </DialogContent>
     </Dialog>
   );
