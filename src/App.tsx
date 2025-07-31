@@ -22,6 +22,7 @@ import { FormsPage } from "./pages/forms/FormsPage";
 import { SignupFormsPage } from "./pages/forms/SignupFormsPage";
 import { LandingPagesPage } from "./pages/forms/LandingPagesPage";
 import { PopupsPage } from "./pages/forms/PopupsPage";
+import { FormBuilder } from "./components/FormBuilder";
 import { TagsPage } from "./pages/audience/TagsPage";
 import { SegmentsPage } from "./pages/audience/SegmentsPage";
 import { SurveysPage } from "./pages/audience/SurveysPage";
@@ -70,6 +71,7 @@ const App: React.FC = () => {
               <Route path="/forms/signup" element={<SignupFormsPage />} />
               <Route path="/forms/landing" element={<LandingPagesPage />} />
               <Route path="/forms/popups" element={<PopupsPage />} />
+              <Route path="/forms/builder" element={<FormBuilder />} />
               
               {/* Audience Routes */}
               <Route path="/audience" element={<AudiencePage />} />

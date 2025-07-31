@@ -48,6 +48,8 @@ export const FormsPage: React.FC = () => {
   };
 
   const handleEditForm = (form: any) => {
+    // In a real app, this would open the form builder with the form data
+    navigate('/forms/builder', { state: { formData: form, isEditing: true } });
     toast({
       title: "Opening Form Builder",
       description: `Editing "${form.name}" with drag-and-drop form builder`,
