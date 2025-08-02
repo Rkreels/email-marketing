@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
+import { Separator } from '@/components/ui/separator';
 import { 
   Type, 
   Image, 
@@ -423,90 +424,138 @@ export const DragDropEmailBuilder: React.FC<DragDropEmailBuilderProps> = ({
               </div>
             </div>
 
-            {/* Canvas */}
-            <div className="flex-1 p-4 overflow-auto bg-gray-100">
-              <div className={`mx-auto bg-white shadow-lg ${
-                previewMode === 'mobile' ? 'max-w-sm' : 
-                previewMode === 'tablet' ? 'max-w-md' : 'max-w-2xl'
-              }`}>
-                <div 
-                  ref={canvasRef}
-                  className="min-h-96"
-                  onDrop={(e) => {
-                    e.preventDefault();
-                    if (draggedElement) {
-                      addElement(draggedElement);
-                      setDraggedElement(null);
-                    }
-                  }}
-                  onDragOver={(e) => e.preventDefault()}
-                >
-                  {elements.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center h-96 text-gray-500">
-                      <Plus className="h-12 w-12 mb-4" />
-                      <p className="text-lg font-medium">Start Building Your Email</p>
-                      <p className="text-sm">Drag elements from the sidebar or click to add them</p>
-                    </div>
-                  ) : (
-                    elements.map((element) => (
-                      <div
-                        key={element.id}
-                        className={`relative group cursor-pointer ${
-                          selectedElement === element.id ? 'ring-2 ring-blue-500' : ''
-                        }`}
-                        onClick={() => setSelectedElement(element.id)}
-                      >
-                        {/* Element Toolbar */}
-                        <div className="absolute top-0 right-0 bg-white shadow-md rounded-bl z-10 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <div className="flex">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                moveElement(element.id, 'up');
-                              }}
-                            >
-                              ↑
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                moveElement(element.id, 'down');
-                              }}
-                            >
-                              ↓
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                duplicateElement(element.id);
-                              }}
-                            >
-                              <Copy className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                removeElement(element.id);
-                              }}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
+            {/* Enhanced Canvas with Proper Scrolling */}
+            <div className="flex-1 overflow-hidden bg-gray-100">
+              <div className="h-full p-4 overflow-y-auto">
+                <div className={`mx-auto bg-white shadow-lg transition-all duration-300 ${
+                  previewMode === 'mobile' ? 'max-w-sm' : 
+                  previewMode === 'tablet' ? 'max-w-md' : 'max-w-2xl'
+                }`}>
+                  {/* Device Frame Indicator */}
+                  <div className="bg-gray-200 px-4 py-2 text-xs text-gray-600 border-b flex justify-between items-center">
+                    <span>
+                      {previewMode.charAt(0).toUpperCase() + previewMode.slice(1)} Preview
+                      {previewMode === 'mobile' && ' (375px)'}
+                      {previewMode === 'tablet' && ' (768px)'}
+                      {previewMode === 'desktop' && ' (Desktop)'}
+                    </span>
+                    <span className="text-gray-500">{elements.length} elements</span>
+                  </div>
+
+                  <div 
+                    ref={canvasRef}
+                    className="min-h-[600px] relative"
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      if (draggedElement) {
+                        addElement(draggedElement);
+                        setDraggedElement(null);
+                      }
+                    }}
+                    onDragOver={(e) => e.preventDefault()}
+                  >
+                    {elements.length === 0 ? (
+                      <div className="flex flex-col items-center justify-center h-96 text-gray-500 bg-gradient-to-br from-gray-50 to-gray-100">
+                        <Plus className="h-16 w-16 mb-4 text-gray-400" />
+                        <p className="text-xl font-medium mb-2">Start Building Your Email</p>
+                        <p className="text-sm text-center max-w-md">
+                          Drag elements from the sidebar to create your email,<br />
+                          or click on any element to add it instantly
+                        </p>
+                        <div className="mt-4 flex gap-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => addElement('header')}
+                          >
+                            Add Header
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => addElement('text')}
+                          >
+                            Add Text
+                          </Button>
                         </div>
+                      </div>
+                    ) : (
+                      elements.map((element, index) => (
+                        <div
+                          key={element.id}
+                          className={`relative group cursor-pointer transition-all duration-200 ${
+                            selectedElement === element.id ? 'ring-2 ring-blue-500 ring-inset' : 'hover:ring-1 hover:ring-gray-300'
+                          }`}
+                          onClick={() => setSelectedElement(element.id)}
+                        >
+                          {/* Enhanced Element Toolbar */}
+                          <div className="absolute top-2 right-2 bg-white shadow-lg rounded-lg z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-200 border">
+                            <div className="flex items-center">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  moveElement(element.id, 'up');
+                                }}
+                                disabled={index === 0}
+                                title="Move up"
+                                className="h-8 w-8 p-0"
+                              >
+                                ↑
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  moveElement(element.id, 'down');
+                                }}
+                                disabled={index === elements.length - 1}
+                                title="Move down"
+                                className="h-8 w-8 p-0"
+                              >
+                                ↓
+                              </Button>
+                              <Separator orientation="vertical" className="h-4 mx-1" />
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  duplicateElement(element.id);
+                                }}
+                                title="Duplicate"
+                                className="h-8 w-8 p-0"
+                              >
+                                <Copy className="h-3 w-3" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  removeElement(element.id);
+                                }}
+                                title="Delete"
+                                className="h-8 w-8 p-0 text-red-500 hover:text-red-700"
+                              >
+                                <Trash2 className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          </div>
+
+                          {/* Element Type Badge */}
+                          <div className="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+                            {element.type}
+                          </div>
 
                         {/* Render Element */}
                         <div dangerouslySetInnerHTML={{ __html: generateElementHTML(element) }} />
-                      </div>
-                    ))
-                  )}
+                        </div>
+                      ))
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
