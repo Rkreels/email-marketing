@@ -34,6 +34,7 @@ import { ConnectedSitesPage } from "./pages/website/ConnectedSitesPage";
 import { ReportsPage } from "./pages/website/ReportsPage";
 import { ContentPage } from "./pages/content/ContentPage";
 import { IntegrationsPage } from "./pages/integrations/IntegrationsPage";
+import { EcommercePage } from "./pages/ecommerce/EcommercePage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -92,10 +93,13 @@ const App: React.FC = () => {
               {/* Content Routes */}
               <Route path="/content" element={<ContentPage />} />
               
-              {/* Integrations Routes */}
-              <Route path="/integrations" element={<IntegrationsPage />} />
-              
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+               {/* Integrations Routes */}
+               <Route path="/integrations" element={<IntegrationsPage />} />
+               
+               {/* E-commerce Routes */}
+               <Route path="/ecommerce" element={<EcommercePage />} />
+               
+               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
               </Routes>
             </MainLayout>

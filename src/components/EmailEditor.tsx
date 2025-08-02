@@ -216,20 +216,65 @@ export const EmailEditor: React.FC<EmailEditorProps> = ({
                   Drag & Drop
                 </Button>
                 <div className="w-px h-6 bg-gray-300 mx-2" />
-                <Button variant="outline" size="sm">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => {
+                    const selection = window.getSelection();
+                    if (selection && selection.rangeCount > 0) {
+                      document.execCommand('bold', false);
+                    }
+                  }}
+                >
                   <Bold className="h-4 w-4" />
                 </Button>
-                <Button variant="outline" size="sm">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => {
+                    const selection = window.getSelection();
+                    if (selection && selection.rangeCount > 0) {
+                      document.execCommand('italic', false);
+                    }
+                  }}
+                >
                   <Italic className="h-4 w-4" />
                 </Button>
-                <Button variant="outline" size="sm">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => {
+                    const selection = window.getSelection();
+                    if (selection && selection.rangeCount > 0) {
+                      document.execCommand('underline', false);
+                    }
+                  }}
+                >
                   <Underline className="h-4 w-4" />
                 </Button>
                 <div className="w-px h-6 bg-gray-300 mx-2" />
-                <Button variant="outline" size="sm">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => {
+                    const selection = window.getSelection();
+                    if (selection && selection.rangeCount > 0) {
+                      document.execCommand('justifyLeft', false);
+                    }
+                  }}
+                >
                   <AlignLeft className="h-4 w-4" />
                 </Button>
-                <Button variant="outline" size="sm">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => {
+                    const selection = window.getSelection();
+                    if (selection && selection.rangeCount > 0) {
+                      document.execCommand('justifyCenter', false);
+                    }
+                  }}
+                >
                   <AlignCenter className="h-4 w-4" />
                 </Button>
               </div>
@@ -259,7 +304,34 @@ export const EmailEditor: React.FC<EmailEditorProps> = ({
                   </Button>
                 </div>
                 
-                <Button variant="outline" size="sm">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => {
+                    if (content) {
+                      const previewWindow = window.open('', '_blank');
+                      if (previewWindow) {
+                        previewWindow.document.write(`
+                          <!DOCTYPE html>
+                          <html>
+                            <head>
+                              <title>Email Preview</title>
+                              <meta charset="utf-8">
+                              <meta name="viewport" content="width=device-width, initial-scale=1">
+                            </head>
+                            <body style="margin: 0; padding: 20px; background-color: #f5f5f5;">
+                              <div style="max-width: 600px; margin: 0 auto; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                                ${content}
+                              </div>
+                            </body>
+                          </html>
+                        `);
+                        previewWindow.document.close();
+                      }
+                    }
+                  }}
+                  disabled={!content}
+                >
                   <Eye className="h-4 w-4 mr-1" />
                   Preview
                 </Button>
@@ -276,11 +348,13 @@ export const EmailEditor: React.FC<EmailEditorProps> = ({
                 previewMode === 'mobile' ? 'max-w-sm' : 
                 previewMode === 'tablet' ? 'max-w-md' : 'max-w-2xl'
               }`}>
-                <Textarea
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  className="w-full h-full min-h-96 border-0 resize-none font-mono text-sm"
-                  placeholder="Start building your email... Use the elements panel or templates to get started."
+                <div
+                  contentEditable
+                  dangerouslySetInnerHTML={{ __html: content }}
+                  onInput={(e) => setContent(e.currentTarget.innerHTML)}
+                  className="w-full h-full min-h-96 border-0 resize-none text-sm p-4 focus:outline-none"
+                  style={{ minHeight: '400px' }}
+                  data-placeholder="Start building your email... Use the elements panel or templates to get started."
                 />
                 
                 {/* Preview */}

@@ -389,7 +389,30 @@ export const DragDropEmailBuilder: React.FC<DragDropEmailBuilderProps> = ({
               </div>
               
               <div className="flex items-center space-x-2">
-                <Button variant="outline" size="sm">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => {
+                    const html = generateHTML();
+                    const previewWindow = window.open('', '_blank');
+                    if (previewWindow) {
+                      previewWindow.document.write(`
+                        <!DOCTYPE html>
+                        <html>
+                          <head>
+                            <title>Email Preview</title>
+                            <meta charset="utf-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1">
+                          </head>
+                          <body style="margin: 0; padding: 20px; background-color: #f5f5f5;">
+                            ${html}
+                          </body>
+                        </html>
+                      `);
+                      previewWindow.document.close();
+                    }
+                  }}
+                >
                   <Eye className="h-4 w-4 mr-1" />
                   Preview
                 </Button>
@@ -513,9 +536,86 @@ export const DragDropEmailBuilder: React.FC<DragDropEmailBuilderProps> = ({
 
 // Helper function to generate HTML for individual elements
 const generateElementHTML = (element: EmailElement): string => {
-  // Implementation would be similar to the generateHTML function above
-  // but for individual elements
-  return `<div>Element: ${element.type}</div>`;
+  switch (element.type) {
+    case 'header':
+      return `
+        <div style="background-color: ${element.content.backgroundColor}; padding: ${element.content.padding}; text-align: center;">
+          <img src="${element.content.logoUrl}" alt="Logo" style="max-height: 60px;" />
+        </div>
+      `;
+    case 'text':
+      return `
+        <div style="padding: 20px; text-align: ${element.content.alignment};">
+          <div style="color: ${element.content.color}; font-size: ${element.content.fontSize};">
+            ${element.content.text}
+          </div>
+        </div>
+      `;
+    case 'image':
+      return `
+        <div style="padding: 20px; text-align: ${element.content.alignment};">
+          <img src="${element.content.src}" alt="${element.content.alt}" style="width: ${element.content.width}; height: auto;" />
+        </div>
+      `;
+    case 'button':
+      return `
+        <div style="padding: 20px; text-align: ${element.content.alignment};">
+          <a href="${element.content.url}" style="
+            background-color: ${element.content.backgroundColor}; 
+            color: ${element.content.textColor}; 
+            padding: ${element.content.padding}; 
+            text-decoration: none; 
+            border-radius: ${element.content.borderRadius};
+            display: inline-block;
+          ">
+            ${element.content.text}
+          </a>
+        </div>
+      `;
+    case 'divider':
+      return `
+        <div style="padding: 0 20px;">
+          <hr style="
+            border: none; 
+            border-top: ${element.content.thickness} ${element.content.style} ${element.content.color}; 
+            margin: ${element.content.margin};
+          " />
+        </div>
+      `;
+    case 'spacer':
+      return `<div style="height: ${element.content.height};"></div>`;
+    case 'social':
+      return `
+        <div style="padding: 20px; text-align: ${element.content.alignment};">
+          ${element.content.platforms.map((platform: string) => `
+            <a href="#" style="margin: 0 ${element.content.spacing};">
+              <img src="https://via.placeholder.com/${element.content.iconSize}?text=${platform.charAt(0).toUpperCase()}" 
+                   alt="${platform}" 
+                   style="width: ${element.content.iconSize}; height: ${element.content.iconSize};" />
+            </a>
+          `).join('')}
+        </div>
+      `;
+    case 'footer':
+      return `
+        <div style="
+          background-color: ${element.content.backgroundColor}; 
+          color: ${element.content.textColor}; 
+          font-size: ${element.content.fontSize}; 
+          padding: 30px 20px; 
+          text-align: center;
+        ">
+          <p style="margin: 0 0 10px 0;">${element.content.companyName}</p>
+          <p style="margin: 0 0 15px 0;">${element.content.address}</p>
+          <p style="margin: 0;">
+            <a href="#" style="color: ${element.content.textColor};">Unsubscribe</a> | 
+            <a href="#" style="color: ${element.content.textColor};">Update Preferences</a>
+          </p>
+        </div>
+      `;
+    default:
+      return `<div>Element: ${element.type}</div>`;
+  }
 };
 
 // Element properties panel component
@@ -572,6 +672,83 @@ const ElementPropertiesPanel: React.FC<{
             <Input
               value={element.content.url}
               onChange={(e) => updateContent({ url: e.target.value })}
+            />
+          </div>
+          <div>
+            <Label>Background Color</Label>
+            <Input
+              type="color"
+              value={element.content.backgroundColor}
+              onChange={(e) => updateContent({ backgroundColor: e.target.value })}
+            />
+          </div>
+        </div>
+      );
+    
+    case 'image':
+      return (
+        <div className="space-y-4">
+          <div>
+            <Label>Image URL</Label>
+            <Input
+              value={element.content.src}
+              onChange={(e) => updateContent({ src: e.target.value })}
+            />
+          </div>
+          <div>
+            <Label>Alt Text</Label>
+            <Input
+              value={element.content.alt}
+              onChange={(e) => updateContent({ alt: e.target.value })}
+            />
+          </div>
+          <div>
+            <Label>Width</Label>
+            <Input
+              value={element.content.width}
+              onChange={(e) => updateContent({ width: e.target.value })}
+            />
+          </div>
+        </div>
+      );
+    
+    case 'header':
+      return (
+        <div className="space-y-4">
+          <div>
+            <Label>Logo URL</Label>
+            <Input
+              value={element.content.logoUrl}
+              onChange={(e) => updateContent({ logoUrl: e.target.value })}
+            />
+          </div>
+          <div>
+            <Label>Background Color</Label>
+            <Input
+              type="color"
+              value={element.content.backgroundColor}
+              onChange={(e) => updateContent({ backgroundColor: e.target.value })}
+            />
+          </div>
+        </div>
+      );
+    
+    case 'footer':
+      return (
+        <div className="space-y-4">
+          <div>
+            <Label>Company Name</Label>
+            <Input
+              value={element.content.companyName}
+              onChange={(e) => updateContent({ companyName: e.target.value })}
+            />
+          </div>
+          <div>
+            <Label>Address</Label>
+            <Textarea
+              value={element.content.address}
+              onChange={(e) => updateContent({ address: e.target.value })}
+              rows={2}
             />
           </div>
           <div>
