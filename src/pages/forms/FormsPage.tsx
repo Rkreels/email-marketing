@@ -43,15 +43,17 @@ export const FormsPage: React.FC = () => {
       audience: 'All Subscribers'
     };
     
-    addForm(newForm);
-    
-    // Navigate to form builder
-    navigate('/forms/builder', { state: { formData: newForm, isEditing: false } });
+    const addedForm = addForm(newForm);
     
     toast({
       title: "Form Created",
-      description: `New ${type} form created. Opening form builder...`,
+      description: `New ${type} form created successfully. Opening form builder...`,
     });
+    
+    // Small delay to ensure toast is visible before navigation
+    setTimeout(() => {
+      navigate('/forms/builder', { state: { formData: newForm, isEditing: false } });
+    }, 500);
   };
 
   const handleEditForm = (form: any) => {
