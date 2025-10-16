@@ -4,15 +4,19 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 import { PerformanceChart } from '@/components/charts/PerformanceChart';
 import { 
   BarChart3, TrendingUp, Users, Mail, MousePointer, 
-  DollarSign, Eye, Download, Filter, Calendar
+  DollarSign, Eye, Download, Filter, Calendar, Globe, MapPin, Clock
 } from 'lucide-react';
 
 export const AnalyticsPage: React.FC = () => {
   const [dateRange, setDateRange] = useState('30days');
   const [reportType, setReportType] = useState('overview');
+  const [detailCampaign, setDetailCampaign] = useState<any>(null);
 
   const overviewStats = [
     { 
@@ -281,11 +285,12 @@ export const AnalyticsPage: React.FC = () => {
                       <Button 
                         variant="outline" 
                         size="sm"
+                        onClick={() => setDetailCampaign(campaign)}
                         data-voice-context={`View detailed analytics for ${campaign.name} including click maps and subscriber activity`}
                         data-voice-action={`Opening ${campaign.name} detailed report`}
                       >
                         <Eye className="h-4 w-4 mr-2" />
-                        Details
+                        View Details
                       </Button>
                     </div>
                   </div>
@@ -498,6 +503,157 @@ export const AnalyticsPage: React.FC = () => {
           </div>
         </TabsContent>
       </Tabs>
+
+      {/* Campaign Details Modal */}
+      <Dialog open={!!detailCampaign} onOpenChange={() => setDetailCampaign(null)}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Detailed Analytics: {detailCampaign?.name}</DialogTitle>
+            <DialogDescription>
+              In-depth performance metrics and subscriber behavior analysis
+            </DialogDescription>
+          </DialogHeader>
+          
+          {detailCampaign && (
+            <div className="space-y-6">
+              {/* Performance Metrics */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <Card>
+                  <CardContent className="p-4 text-center">
+                    <Mail className="h-6 w-6 mx-auto mb-2 text-blue-600" />
+                    <div className="text-2xl font-bold">{detailCampaign.sent.toLocaleString()}</div>
+                    <div className="text-xs text-gray-600">Sent</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-4 text-center">
+                    <Eye className="h-6 w-6 mx-auto mb-2 text-green-600" />
+                    <div className="text-2xl font-bold">{detailCampaign.opens.toLocaleString()}</div>
+                    <div className="text-xs text-gray-600">Opens ({detailCampaign.openRate})</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-4 text-center">
+                    <MousePointer className="h-6 w-6 mx-auto mb-2 text-purple-600" />
+                    <div className="text-2xl font-bold">{detailCampaign.clicks.toLocaleString()}</div>
+                    <div className="text-xs text-gray-600">Clicks ({detailCampaign.clickRate})</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-4 text-center">
+                    <DollarSign className="h-6 w-6 mx-auto mb-2 text-emerald-600" />
+                    <div className="text-2xl font-bold">{detailCampaign.revenue}</div>
+                    <div className="text-xs text-gray-600">Revenue</div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Engagement Timeline */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Clock className="h-5 w-5 mr-2" />
+                    Engagement Timeline
+                  </CardTitle>
+                  <CardDescription>Opens and clicks over the first 48 hours</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <PerformanceChart
+                    type="line"
+                    data={[
+                      { time: '0h', opens: 234, clicks: 45 },
+                      { time: '4h', opens: 456, clicks: 89 },
+                      { time: '8h', opens: 567, clicks: 123 },
+                      { time: '12h', opens: 623, clicks: 145 },
+                      { time: '24h', opens: 789, clicks: 178 },
+                      { time: '36h', opens: 845, clicks: 198 },
+                      { time: '48h', opens: 892, clicks: 210 }
+                    ]}
+                    xAxisKey="time"
+                    height={200}
+                    colors={['#8884d8', '#82ca9d']}
+                  />
+                </CardContent>
+              </Card>
+
+              {/* Top Links Clicked */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Top Clicked Links</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {[
+                      { url: 'https://example.com/product-page', clicks: 156, percentage: 45 },
+                      { url: 'https://example.com/blog-post', clicks: 89, percentage: 26 },
+                      { url: 'https://example.com/pricing', clicks: 67, percentage: 19 },
+                      { url: 'https://example.com/contact', clicks: 34, percentage: 10 }
+                    ].map((link, index) => (
+                      <div key={index} className="space-y-1">
+                        <div className="flex justify-between text-sm">
+                          <span className="truncate flex-1 mr-4">{link.url}</span>
+                          <span className="font-medium">{link.clicks} clicks</span>
+                        </div>
+                        <Progress value={link.percentage} className="h-2" />
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Device Breakdown */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Device Breakdown</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {[
+                        { device: 'Desktop', count: 534, percentage: 60 },
+                        { device: 'Mobile', count: 267, percentage: 30 },
+                        { device: 'Tablet', count: 89, percentage: 10 }
+                      ].map((device, index) => (
+                        <div key={index} className="space-y-1">
+                          <div className="flex justify-between text-sm">
+                            <span>{device.device}</span>
+                            <span className="font-medium">{device.count}</span>
+                          </div>
+                          <Progress value={device.percentage} className="h-2" />
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Email Clients</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      {[
+                        { client: 'Gmail', count: 401, percentage: 45 },
+                        { client: 'Outlook', count: 267, percentage: 30 },
+                        { client: 'Apple Mail', count: 178, percentage: 20 },
+                        { client: 'Other', count: 45, percentage: 5 }
+                      ].map((client, index) => (
+                        <div key={index} className="space-y-1">
+                          <div className="flex justify-between text-sm">
+                            <span>{client.client}</span>
+                            <span className="font-medium">{client.count}</span>
+                          </div>
+                          <Progress value={client.percentage} className="h-2" />
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

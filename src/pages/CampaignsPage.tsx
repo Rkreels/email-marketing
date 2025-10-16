@@ -11,10 +11,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Progress } from '@/components/ui/progress';
 import { useAppContext } from '@/contexts/AppContext';
+import { PerformanceChart } from '@/components/charts/PerformanceChart';
 import { 
   Plus, Search, Filter, Mail, Calendar, Users, TrendingUp, 
   Edit, Trash2, Play, Pause, Copy, BarChart3, Target,
-  Clock, Eye, MousePointer, DollarSign, Send, TestTube
+  Clock, Eye, MousePointer, DollarSign, Send, TestTube, MapPin, Globe
 } from 'lucide-react';
 
 interface Campaign {
@@ -43,6 +44,7 @@ export const CampaignsPage: React.FC = () => {
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [sortBy, setSortBy] = useState('lastModified');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
+  const [detailCampaign, setDetailCampaign] = useState<Campaign | null>(null);
   
   const { campaigns, addCampaign, updateCampaign, deleteCampaign } = useAppContext();
   // Data is now coming from context
@@ -507,11 +509,12 @@ export const CampaignsPage: React.FC = () => {
                             <Button 
                               variant="outline" 
                               size="sm"
+                              onClick={() => setDetailCampaign(campaign)}
                               data-voice-context={`View detailed analytics for ${campaign.name} including click maps, subscriber activity, revenue attribution, and comparative performance`}
                               data-voice-action={`Opening detailed analytics dashboard for ${campaign.name}`}
                             >
                               <BarChart3 className="h-4 w-4 mr-1" />
-                              Analytics
+                              View Details
                             </Button>
                           )}
                           
@@ -582,6 +585,154 @@ export const CampaignsPage: React.FC = () => {
           )}
         </TabsContent>
       </Tabs>
+
+      {/* Campaign Details Modal */}
+      <Dialog open={!!detailCampaign} onOpenChange={() => setDetailCampaign(null)}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Campaign Details: {detailCampaign?.name}</DialogTitle>
+            <DialogDescription>
+              Comprehensive analytics and performance metrics
+            </DialogDescription>
+          </DialogHeader>
+          
+          {detailCampaign && (
+            <div className="space-y-6">
+              {/* Key Metrics Grid */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <Card>
+                  <CardContent className="p-4 text-center">
+                    <Mail className="h-6 w-6 mx-auto mb-2 text-blue-600" />
+                    <div className="text-2xl font-bold">{detailCampaign.recipients.toLocaleString()}</div>
+                    <div className="text-xs text-gray-600">Recipients</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-4 text-center">
+                    <Eye className="h-6 w-6 mx-auto mb-2 text-green-600" />
+                    <div className="text-2xl font-bold">{detailCampaign.openRate}</div>
+                    <div className="text-xs text-gray-600">Open Rate</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-4 text-center">
+                    <MousePointer className="h-6 w-6 mx-auto mb-2 text-purple-600" />
+                    <div className="text-2xl font-bold">{detailCampaign.clickRate}</div>
+                    <div className="text-xs text-gray-600">Click Rate</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-4 text-center">
+                    <DollarSign className="h-6 w-6 mx-auto mb-2 text-emerald-600" />
+                    <div className="text-2xl font-bold">{detailCampaign.revenue}</div>
+                    <div className="text-xs text-gray-600">Revenue</div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Performance Chart */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Engagement Over Time</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <PerformanceChart
+                    type="line"
+                    data={[
+                      { hour: '0h', opens: 45, clicks: 12 },
+                      { hour: '2h', opens: 123, clicks: 34 },
+                      { hour: '4h', opens: 234, clicks: 56 },
+                      { hour: '6h', opens: 345, clicks: 89 },
+                      { hour: '8h', opens: 423, clicks: 112 },
+                      { hour: '12h', opens: 398, clicks: 98 },
+                      { hour: '24h', opens: 456, clicks: 123 }
+                    ]}
+                    xAxisKey="hour"
+                    height={200}
+                    colors={['#8884d8', '#82ca9d']}
+                  />
+                </CardContent>
+              </Card>
+
+              {/* Geographic Distribution */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Globe className="h-5 w-5 mr-2" />
+                    Geographic Distribution
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3">
+                    {[
+                      { country: 'United States', opens: 456, clicks: 89, percentage: 38 },
+                      { country: 'United Kingdom', opens: 234, clicks: 45, percentage: 19 },
+                      { country: 'Canada', opens: 178, clicks: 34, percentage: 15 },
+                      { country: 'Australia', opens: 145, clicks: 28, percentage: 12 },
+                      { country: 'Germany', opens: 123, clicks: 23, percentage: 10 },
+                      { country: 'Other', opens: 98, clicks: 15, percentage: 6 }
+                    ].map((geo, index) => (
+                      <div key={index} className="space-y-1">
+                        <div className="flex justify-between text-sm">
+                          <span className="flex items-center">
+                            <MapPin className="h-4 w-4 mr-2 text-gray-400" />
+                            {geo.country}
+                          </span>
+                          <span className="font-medium">{geo.opens} opens • {geo.clicks} clicks</span>
+                        </div>
+                        <Progress value={geo.percentage} className="h-2" />
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Campaign Information */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Campaign Information</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <span className="text-gray-600">Subject:</span>
+                      <p className="font-medium">{detailCampaign.subject}</p>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Preview Text:</span>
+                      <p className="font-medium">{detailCampaign.previewText}</p>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Segment:</span>
+                      <p className="font-medium">{detailCampaign.segment}</p>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Type:</span>
+                      <Badge>{detailCampaign.type}</Badge>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Created:</span>
+                      <p className="font-medium">{detailCampaign.created}</p>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Last Modified:</span>
+                      <p className="font-medium">{detailCampaign.lastModified}</p>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Bounce Rate:</span>
+                      <p className="font-medium">{detailCampaign.bounceRate}</p>
+                    </div>
+                    <div>
+                      <span className="text-gray-600">Unsubscribe Rate:</span>
+                      <p className="font-medium">{detailCampaign.unsubscribeRate}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
