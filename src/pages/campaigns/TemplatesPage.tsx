@@ -854,7 +854,13 @@ export const TemplatesPage: React.FC = () => {
                       <Button 
                         size="sm" 
                         variant="outline"
-                        onClick={() => toast({ title: "Template Copied", description: `${template.name} copied to clipboard` })}
+                        onClick={() => {
+                          navigator.clipboard.writeText(template.htmlContent);
+                          toast({ 
+                            title: "Template HTML Copied", 
+                            description: `${template.name} HTML code has been copied to your clipboard` 
+                          });
+                        }}
                       >
                         <Copy className="h-4 w-4" />
                       </Button>
