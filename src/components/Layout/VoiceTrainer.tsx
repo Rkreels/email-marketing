@@ -7,9 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 interface VoiceTrainerProps {}
 
 export const VoiceTrainer: React.FC<VoiceTrainerProps> = () => {
-  const [isEnabled, setIsEnabled] = useState(() => {
-    return localStorage.getItem('voiceTrainerEnabled') === 'true' || false;
-  });
+  const [isEnabled, setIsEnabled] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [currentContext, setCurrentContext] = useState<string | null>(null);
   const { toast } = useToast();
@@ -72,7 +70,6 @@ export const VoiceTrainer: React.FC<VoiceTrainerProps> = () => {
   const toggleVoiceTrainer = () => {
     const newState = !isEnabled;
     setIsEnabled(newState);
-    localStorage.setItem('voiceTrainerEnabled', newState.toString());
     
     // Clear any existing timeouts
     if (hoverTimeoutRef.current) {
